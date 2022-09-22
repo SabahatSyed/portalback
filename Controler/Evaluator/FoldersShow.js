@@ -1,4 +1,5 @@
 var Userdoc = require("../../Models/User");
+var Folder = require("../../Models/Folders");
 var Evaldoc = require("../../Models/EvalFolder");
 
 module.exports.Showall = async (req, res) => {
@@ -6,7 +7,8 @@ module.exports.Showall = async (req, res) => {
       console.log(req.user)
       if (!req.user) return await res.json("Timed Out");
       try {      
-        const user = await Userdoc.findById(req.user._id).
+
+        const user = await Userdoc.findById({_id:req.user._id}).
         populate({path:"EvaluateFolders",model:"Eval",populate:{path:"Folder",model:"Folder",
         populate:{path:"Course",model:"ProgramCourses"}}}).
         populate({path:"EvaluateFolders",model:"Eval",populate:{path:"Folder",model:"Folder",
@@ -35,6 +37,23 @@ module.exports.ShowId = async (req, res) => {
         populate:{path:"User",model:"User"}}})
         console.log("EvaluateFolders",user.EvaluateFolders)
         await res.status(200).json(user.EvaluateFolders)
+        } catch (err) {
+          console.log(err);
+          await res.status(400).json("error")    
+        }  
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  module.exports.ShowFolder = async (req, res) => {
+    try {
+      console.log(req.user)
+      if (!req.user) return await res.json("Timed Out");
+      try {  
+        const user = await Folder.find({}).
+        populate("Course User Evaluator")
+        console.log("EvaluateFolders",user)
+        await res.status(200).json(user)
         } catch (err) {
           console.log(err);
           await res.status(400).json("error")    

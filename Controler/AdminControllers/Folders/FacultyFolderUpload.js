@@ -176,6 +176,77 @@ module.exports.LecSubimt = async (req, res) => {
       console.log(err);
     }    
 }
+
+module.exports.addEvaluation = async (req, res) => {
+    
+  try {
+      console.log(req.params.id)
+      if (!req.user) return await res.json("Timed Out");
+      if (!req.user.Roles.includes("Evaluator")) return await res.status(401).json("UnAutherized");        
+      try {        
+        const old = await Folderdoc.findById(req.params.id)               
+        const data=req.body           
+        
+          console.log("dejj",old)
+         var a
+         old.Evaluation.map((item,index)=>{
+          if(item.title==req.body.title){
+            a=item
+          }
+         })
+         console.log("hello",a)
+          var b=old.Evaluation
+        if(a==undefined){
+          b.push(req.body.data)
+          console.log("arrayeb",b)
+          const up = await Folderdoc.findOneAndUpdate({_id:req.params.id},{Evaluation:b,Evaluator:req.user._id});
+          await res.status(200).json(up)
+        }
+        else{
+          b.map((item,index)=>{
+            console.log("i am here")
+
+            if(item.title==req.body.title){
+              console.log("i sm here")
+              b[index]=req.body.data
+            }
+          })
+          console.log("hellooldevaluation",b)
+          const up = await Folderdoc.findOneAndUpdate({_id:req.params.id},{Evaluation:b,Evaluator:req.user._id});
+          await res.status(200).json(up)
+        }
+          
+        
+      }catch (err) {
+          console.log(err);
+          await res.status(400).json("error")    
+      }  
+    } catch (err) {
+      console.log(err);
+    }    
+}
+
+module.exports.editEvaluation = async (req, res) => {
+    
+  try {
+      console.log(req.params.id)
+      if (!req.user) return await res.json("Timed Out");
+      if (!req.user.Roles.includes("Evaluator")) return await res.status(401).json("UnAutherized");        
+      try {        
+        const old = await Folderdoc.findByIdAndUpdate(req.params.id,{Evaluated:true})               
+        
+      
+         console.log("CourseFolder",old)
+        await res.status(200).json(old)
+        
+      }catch (err) {
+          console.log(err);
+          await res.status(400).json("error")    
+      }  
+    } catch (err) {
+      console.log(err);
+    }    
+}
 module.exports.showOne = async (req, res) => {
     
     try {

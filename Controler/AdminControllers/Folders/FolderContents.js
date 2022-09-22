@@ -183,10 +183,44 @@ module.exports.Lab = async (req, res) => {
       if (!req.user) return await res.status(401).json("Timed Out");
       if(!req.user.Roles.includes("Admin")) return res.status(401).json("Unautherized");
       console.log("req.data",req.body)
+      if(req.body.type=="Lab"){
+        const old = await LabContents.findOne({});        
+        const datee=new Date(req.body.date)
+        console.log("date",datee)
+        if(req.body.round=="Round1"){
+          const obj={Quiz:old.Round1.Quiz,Assignment:old.Round1.Assignment,Deadline:datee}
+          await LabContents.findByIdAndUpdate(old._id,{Round1:obj})
+          await LabReq.findByIdAndDelete(req.body._id)
+        }
+        if(req.body.round=="Round2"){
+          const obj={Quiz:old.Round2.Quiz,Assignment:old.Round2.Assignment,Deadline:datee}
+          await LabContents.findByIdAndUpdate(old._id,{Round2:obj})
+          await LabReq.findByIdAndDelete(req.body._id)
+
+        }
+      }
+      else if(req.body.type=="Theory"){
+        const old = await LabContents.findOne({});        
+        const datee=new Date(req.body.date)
+        console.log("date",datee)
+        if(req.body.round=="Round1"){
+          const obj={Quiz:old.Round1.Quiz,Assignment:old.Round1.Assignment,Deadline:datee}
+          await TheoryContents.findByIdAndUpdate(old._id,{Round1:obj})
+          await TheoryReq.findByIdAndDelete(req.body._id)
+
+        }
+        if(req.body.round=="Round2"){
+          const obj={Quiz:old.Round2.Quiz,Assignment:old.Round2.Assignment,Deadline:datee}
+          await TheoryContents.findByIdAndUpdate(old._id,{Round2:obj})
+          await LabReq.findByIdAndDelete(req.body._id)
+
+        }
+        await res.status(200).json({message:"success"});
+
+      }
       /*const aa = await LabReq.find({}).populate("Request_id");
       const bb=await TheoryReq.find({}).populate("Request_id");
-      console.log("aa", aa);
-      await res.status(200).json({Lab:aa,Theory:bb});*/
+      console.log("aa", aa);*/
     } catch (err) {
       console.log(err);
     }

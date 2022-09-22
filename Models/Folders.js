@@ -82,11 +82,39 @@ var FolderSchema = new mongoose.Schema({
                     type: mongoose.Schema.ObjectId,
                     ref: 'Base64'
                 }
-            }
+            },
+            
         },
         default:"none"
         }
     ],
+    Evaluation:[{
+        title:{
+            type:String
+        },
+        clo_no:{
+            type:String
+        },
+        clo_correct:{
+            type:Boolean
+        }
+        ,btl_no:{
+            type:String
+        },
+        btl_correct:{
+            type:Boolean
+        },
+        Comments:{
+            type:String
+        },
+        Feedback:{
+            type:String
+        }
+    }],
+    Evaluated:{
+        type:Boolean,
+        default:false
+    },
     LabTheory:{
         type:String,
         default:""
@@ -117,6 +145,10 @@ var FolderSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    Evaluator:{
+        type:mongoose.Schema.ObjectId,
+        ref:"User"
+    }
        
 });
 
