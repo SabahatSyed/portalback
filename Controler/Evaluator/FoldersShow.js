@@ -7,7 +7,7 @@ module.exports.Showall = async (req, res) => {
       console.log(req.user)
       if (!req.user) return await res.json("Timed Out");
       try {      
-
+        console.log("user",req.user._id)
         const user = await Userdoc.findById({_id:req.user._id}).
         populate({path:"EvaluateFolders",model:"Eval",populate:{path:"Folder",model:"Folder",
         populate:{path:"Course",model:"ProgramCourses"}}}).
@@ -15,7 +15,7 @@ module.exports.Showall = async (req, res) => {
         populate:{path:"User",model:"User"}}})
        
         
-        console.log("EvaluateFolders",user.EvaluateFolders)
+        console.log("EvaluateFolders",user)
         await res.status(200).json(user.EvaluateFolders)
         } catch (err) {
           console.log(err);
